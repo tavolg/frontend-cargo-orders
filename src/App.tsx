@@ -295,7 +295,7 @@ export default function App() {
         )}
 
         {selectedOrder && (
-          <div className="flex min-h-0 flex-1 animate-[fadeIn_0.25s_ease-out] flex-col overflow-hidden rounded-[42px] bg-[#0d1116] p-5 transition-all duration-300">
+          <div className="flex min-h-0 flex-1 animate-[fadeIn_0.25s_ease-out] flex-col overflow-hidden rounded-[42px] bg-[#000000] p-5 transition-all duration-300">
             <div className="mb-4 flex items-center justify-between">
               <button type="button" onClick={() => setSelectedOrder(null)} className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-300 transition hover:bg-zinc-800/60">
                 <img src={ArrowIcon} alt="back" className="h-5 w-5" />
@@ -345,7 +345,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="mt-4 rounded-[24px] border border-[#2a2d33] bg-[#141b21] px-5 pb-5 pt-0 relative">
+              <div className="mt-12 rounded-[24px] border border-[#2a2d33] bg-[#141b21] px-5 pb-5 pt-0 relative">
                 <div className="flex justify-center -mt-8 mb-4 relative z-10">
                   <Avatar size="lg" src={selectedOrder.driverAvatar ?? undefined} />
                 </div>
@@ -382,7 +382,7 @@ export default function App() {
               </div>
 
               {showPickupData && (
-                <div className="mt-4 rounded-[20px] border border-[#2a2d33] bg-[#141b21] p-3 text-zinc-200">
+                <div className="mt-4 rounded-[20px] border border-black bg-[#000000] p-3 text-zinc-200">
                   <button
                     type="button"
                     onClick={() => setActiveDestination((value) => (value === 'pickup' ? 'dropoff' : 'pickup'))}
