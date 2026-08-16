@@ -165,7 +165,7 @@ export default function App() {
 
               <div className="relative flex h-8 w-8 items-center justify-center">
                 <img src={NotificationIcon} alt="notification" className="h-5 w-5" />
-                <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-[#facc15]" />
+                <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-[#FFEE00]" />
               </div>
             </header>
 
@@ -175,10 +175,10 @@ export default function App() {
                   type="button"
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`relative pb-2 font-semibold transition-colors ${activeTab === tab ? 'text-[#facc15]' : 'text-zinc-500 hover:text-zinc-300'}`}
+                  className={`relative pb-2 font-semibold transition-colors ${activeTab === tab ? 'text-[#FFEE00]' : 'text-zinc-500 hover:text-zinc-300'}`}
                 >
                   {tab}
-                  {activeTab === tab && <span className="absolute -bottom-[9px] left-0 h-[2px] w-full rounded-full bg-[#facc15]" />}
+                  {activeTab === tab && <span className="absolute -bottom-[9px] left-0 h-[2px] w-full rounded-full bg-[#FFEE00]" />}
                 </button>
               ))}
             </nav>
@@ -190,7 +190,7 @@ export default function App() {
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
-                className="w-full rounded-xl border border-[#2a2d33] bg-[#171b20] py-3 pl-10 pr-4 text-sm text-zinc-200 placeholder:text-zinc-500 focus:border-[#facc15]/60 focus:outline-none"
+                className="w-full rounded-xl border border-[#2a2d33] bg-[#171b20] py-3 pl-10 pr-4 text-sm text-zinc-200 placeholder:text-zinc-500 focus:border-[#FFEE00]/60 focus:outline-none"
               />
             </div>
 
@@ -266,7 +266,7 @@ export default function App() {
 
                         <div className="flex gap-3 -mx-4 -mb-4 px-4 pb-4 pt-3">
                           {showPickupButton && (
-                            <div className="flex-1 bg-[#facc15] px-6 py-2.5 text-sm font-bold text-black rounded-full flex items-center justify-center">
+                            <div className="flex-1 bg-[#FFEE00] px-6 py-2.5 text-sm font-bold text-black rounded-full flex items-center justify-center">
                               {order.pickupMessage}
                             </div>
                           )}
@@ -277,7 +277,7 @@ export default function App() {
                               event.stopPropagation();
                               setSelectedOrder(order);
                             }}
-                            className={`flex items-center justify-center gap-2 bg-[#facc15] px-6 py-2.5 text-sm font-bold text-black rounded-full ${showPickupButton ? 'flex-1' : 'w-full'}`}
+                            className={`flex items-center justify-center gap-2 bg-[#FFEE00] px-6 py-2.5 text-sm font-bold text-black rounded-full ${showPickupButton ? 'flex-1' : 'w-full'}`}
                           >
                             <span>Resume</span>
                             <img src={EyeIcon} alt="view" className="h-4 w-4" />
@@ -322,7 +322,7 @@ export default function App() {
                 <div className="relative mt-5 pl-5">
                   <div className="absolute left-0 top-0 h-[78%] w-px bg-[#2d3238]" />
                   <div className="relative pb-5">
-                    <span className="absolute -left-[23px] top-1.5 h-3 w-3 rounded-full bg-[#facc15] ring-4 ring-[#141b21]" />
+                    <span className="absolute -left-[23px] top-1.5 h-3 w-3 rounded-full bg-[#FFEE00] ring-4 ring-[#141b21]" />
                     <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500">Pickup</p>
                     <p className="mt-2 text-[17px] font-semibold leading-tight text-white">{selectedOrder.originCity}</p>
                     <p className="mt-1 text-sm text-zinc-400">{selectedOrder.originAddress}</p>
@@ -357,14 +357,14 @@ export default function App() {
                       const StepIcon = step.active ? StepDoneIcon : StepPendingIcon;
                       return (
                         <div key={`${step.label}-${index}`} className="relative pb-5 last:pb-0">
-                          <span className={`absolute -left-[31px] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${step.active ? 'border-[#141b21] bg-[#facc15]' : 'border-zinc-400 bg-[#1c2127]'}`}>
+                          <span className={`absolute -left-[31px] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${step.active ? 'border-[#141b21] bg-[#FFEE00]' : 'border-zinc-400 bg-[#1c2127]'}`}>
                             <img src={StepIcon} alt="step" className="h-3 w-3" />
                           </span>
                           <div className="flex items-center gap-3 text-[17px] font-normal">
                             <span className={step.active ? 'text-white' : 'text-zinc-400'}>{step.label}</span>
                           </div>
                           {index < (selectedOrder.timeline?.length ?? 0) - 1 && (
-                            <span className={`absolute -left-[24px] top-6 h-5 w-px ${step.active ? 'bg-[#facc15]' : 'bg-zinc-600'}`} />
+                            <span className={`absolute -left-[24px] top-6 h-5 w-px ${step.active ? 'bg-[#FFEE00]' : 'bg-zinc-600'}`} />
                           )}
                         </div>
                       );
@@ -375,7 +375,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setShowPickupData((value) => !value)}
-                  className="mt-6 w-[calc(100%+40px)] -mx-5 -mb-5 rounded-none bg-[#facc15] px-5 py-4 text-center text-[26px] font-bold text-black shadow-[0_0_20px_rgba(250,204,21,0.35)] transition hover:bg-[#f9d948]"
+                  className="mt-6 w-[calc(100%+40px)] -mx-5 -mb-5 rounded-none bg-[#FFEE00] px-5 py-4 text-center text-[26px] font-bold text-black shadow-[0_0_20px_rgba(255,238,0,0.35)] transition hover:bg-[#ffeb3b]"
                 >
                   Track Order
                 </button>
