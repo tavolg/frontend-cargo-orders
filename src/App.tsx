@@ -1,24 +1,30 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Avatar } from './components/Avatar';
-import { OrderCard } from './components/OrderCard';
 import { fetchAllOrders, fetchUpcomingOrders } from './services/api';
 import type { Order } from './types/Order';
 import NotificationIcon from './assets/Notification.svg';
 import ArrowIcon from './assets/Image-1.svg';
+import EyeIcon from './assets/Image.svg';
+import TruckIcon from './assets/g1149.svg';
+import TruckFtlIcon from './assets/g1149_FTL.svg';
+import FclIcon from './assets/Group 26_fcl.svg';
+import StepDoneIcon from './assets/Group 32.svg';
+import StepPendingIcon from './assets/Group 5.svg';
+import PickupPinIcon from './assets/g2355.svg';
+import DropoffPinIcon from './assets/Group 27.svg';
 
 const TABS = ['Upcoming', 'Completed', 'Past'] as const;
 type Tab = (typeof TABS)[number];
 
-const getStatusSteps = (statusCode?: number) => {
-  const steps = ['Created Order', 'Accepted Order', 'Pickup set up by ', 'Pickup Completed'];
-  const activeIndex = Math.min(Math.max(Number(statusCode ?? 1), 1), 4) - 1;
-
-  return steps.map((label, index) => ({
-    label,
-    active: index <= activeIndex,
-  }));
+const getTypeIcon = (type: string) => {
+  const normalized = (type ?? '').toUpperCase();
+  if (normalized === 'FCL') return FclIcon;
+  if (normalized === 'FTL') return TruckFtlIcon;
+  return TruckIcon;
 };
+
+const isInTransitStatus = (status: string) => /asign|transit|pend|recolecci/.test(status);
 
 export default function App() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -89,8 +95,6 @@ export default function App() {
     setShowPickupData(true);
   }, [selectedOrder]);
 
-  const statusSteps = getStatusSteps(selectedOrder?.statusCode);
-
   const handleScrollPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.target instanceof HTMLElement && event.target.closest('button, input, textarea, select')) {
       return;
@@ -152,14 +156,16 @@ export default function App() {
 
         {!selectedOrder && (
           <>
-            <header className="cargo-header">
-              <button type="button" className="cargo-header-btn">
-                <img src={ArrowIcon} alt="back" className="cargo-header-btn-icon" />
+            <header className="mb-4 flex items-center justify-between">
+              <button type="button" className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-white/5">
+                <img src={ArrowIcon} alt="back" className="h-5 w-5" />
               </button>
-              <h1 className="cargo-header-title">Cargo Orders</h1>
-              <div className="cargo-header-notification">
-                <img src={NotificationIcon} alt="notification" className="cargo-header-notification-icon" />
-                <span className="cargo-header-notification-dot" />
+
+              <h1 className="text-[19px] font-bold tracking-[-0.02em]">Cargo Orders</h1>
+
+              <div className="relative flex h-8 w-8 items-center justify-center">
+                <img src={NotificationIcon} alt="notification" className="h-5 w-5" />
+                <span className="absolute right-0 top-0 h-2.5 w-2.5 rounded-full bg-[#facc15]" />
               </div>
             </header>
 
@@ -202,9 +208,85 @@ export default function App() {
               ) : error ? (
                 <div className="py-10 text-center text-sm text-red-400">{error}</div>
               ) : filteredOrders.length > 0 ? (
-                filteredOrders.map((order) => (
-                  <OrderCard key={order.id} order={order} onSelect={setSelectedOrder} />
-                ))
+                filteredOrders.map((order) => {
+                  const typeIcon = getTypeIcon(order.type);
+                  const inTransit = isInTransitStatus(order.status);
+                  const showPickupButton = !inTransit;
+
+                  return (
+                    <article key={order.id} className="-mx-5 px-5">
+                      <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#dfe4eb]">
+                        Order #{order.id}
+                      </div>
+
+                      <div className="rounded-[20px] border border-[#2a2d33] bg-[#11161b] overflow-hidden flex flex-col">
+                        <div className="px-4 pt-4 pb-3 flex-1">
+                          <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center gap-2">
+                              <img src={typeIcon} alt={order.type} className="h-7 w-7 object-contain" />
+                              <span className="text-[16px] font-medium text-white">{order.type}</span>
+                            </div>
+
+                            <div className="flex items-center gap-2 text-[11px] font-medium text-[#83d7ff]">
+                              <span className="h-2.5 w-2.5 rounded-full bg-[#5ea5ff]" />
+                              <span>{inTransit ? 'In transit' : 'Assigned'}</span>
+                            </div>
+                          </div>
+
+                          <div className="relative border-l border-[#2a2d33] pl-5 mt-4">
+                            <div className="pb-4">
+                              <div className="absolute -left-[12px] top-1.5 flex h-5 w-5 items-center justify-center">
+                                <img src={PickupPinIcon} alt="pickup" className="h-4 w-4" />
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <div className="flex-1">
+                                  <p className="text-[10px] uppercase tracking-[0.18em] text-[#8a9198]">Pickup</p>
+                                  <p className="mt-2 text-base font-semibold text-white">{order.originCity}</p>
+                                  <p className="mt-1 text-xs text-[#a8afb6]">{order.originAddress}</p>
+                                </div>
+                                <span className="pt-1 text-[10px] text-[#a8afb6]">{order.originTime}</span>
+                              </div>
+                            </div>
+
+                            <div className="pt-1">
+                              <div className="absolute -left-[12px] top-[84px] flex h-5 w-5 items-center justify-center">
+                                <img src={DropoffPinIcon} alt="dropoff" className="h-4 w-4" />
+                              </div>
+                              <div className="flex items-start gap-3">
+                                <div className="flex-1">
+                                  <p className="text-[10px] uppercase tracking-[0.18em] text-[#8a9198]">Dropoff</p>
+                                  <p className="mt-2 text-base font-semibold text-white">{order.destinationCity}</p>
+                                  <p className="mt-1 text-xs text-[#a8afb6]">{order.destinationAddress}</p>
+                                </div>
+                                <span className="pt-1 text-[10px] text-[#a8afb6]">{order.destinationTime}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-3 -mx-4 -mb-4 px-4 pb-4 pt-3">
+                          {showPickupButton && (
+                            <div className="flex-1 bg-[#facc15] px-6 py-2.5 text-sm font-bold text-black rounded-full flex items-center justify-center">
+                              {order.pickupMessage}
+                            </div>
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setSelectedOrder(order);
+                            }}
+                            className={`flex items-center justify-center gap-2 bg-[#facc15] px-6 py-2.5 text-sm font-bold text-black rounded-full ${showPickupButton ? 'flex-1' : 'w-full'}`}
+                          >
+                            <span>Resume</span>
+                            <img src={EyeIcon} alt="view" className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })
               ) : (
                 <div className="py-10 text-center text-sm text-zinc-500">No se encontraron órdenes para esta búsqueda.</div>
               )}
@@ -263,39 +345,37 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="mt-4 rounded-[24px] border border-[#2a2d33] bg-[#141b21] p-5">
-                <div className="flex justify-center">
+              <div className="mt-4 rounded-[24px] border border-[#2a2d33] bg-[#141b21] px-5 pb-5 pt-0 relative">
+                <div className="flex justify-center -mt-8 mb-4 relative z-10">
                   <Avatar size="lg" src={selectedOrder.driverAvatar ?? undefined} />
                 </div>
-                <p className="mt-4 text-center text-[38px] font-bold tracking-[0.02em]">10:30 PM</p>
+                <p className="text-center text-[38px] font-bold tracking-[0.02em]">10:30 PM</p>
 
                 <div className="mt-5 pl-4">
                   <div className="relative ml-1 border-l border-[#2d3238] pl-7">
-                    {statusSteps.map((step, index) => (
-                      <div key={step.label} className="relative pb-5 last:pb-0">
-                        <span className={`absolute -left-[31px] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${step.active ? 'border-[#141b21] bg-[#facc15]' : 'border-zinc-400 bg-[#1c2127]'}`}>
-                          {step.active && <span className="h-2 w-2 rounded-full bg-[#141b21]" />}
-                        </span>
-                        <div className="flex items-center gap-3 text-[17px] font-normal">
-                          {step.active ? (
-                            <span className="text-[#facc15]">✓</span>
-                          ) : (
-                            <span className="text-zinc-500">○</span>
+                    {selectedOrder.timeline?.map((step, index) => {
+                      const StepIcon = step.active ? StepDoneIcon : StepPendingIcon;
+                      return (
+                        <div key={`${step.label}-${index}`} className="relative pb-5 last:pb-0">
+                          <span className={`absolute -left-[31px] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${step.active ? 'border-[#141b21] bg-[#facc15]' : 'border-zinc-400 bg-[#1c2127]'}`}>
+                            <img src={StepIcon} alt="step" className="h-3 w-3" />
+                          </span>
+                          <div className="flex items-center gap-3 text-[17px] font-normal">
+                            <span className={step.active ? 'text-white' : 'text-zinc-400'}>{step.label}</span>
+                          </div>
+                          {index < (selectedOrder.timeline?.length ?? 0) - 1 && (
+                            <span className={`absolute -left-[24px] top-6 h-5 w-px ${step.active ? 'bg-[#facc15]' : 'bg-zinc-600'}`} />
                           )}
-                          <span className={step.active ? 'text-white' : 'text-zinc-400'}>{step.label}</span>
                         </div>
-                        {index < statusSteps.length - 1 && (
-                          <span className={`absolute -left-[24px] top-6 h-5 w-px ${step.active ? 'bg-[#facc15]' : 'bg-zinc-600'}`} />
-                        )}
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => setShowPickupData((value) => !value)}
-                  className="mt-6 w-full rounded-[18px] bg-[#facc15] px-4 py-4 text-center text-[26px] font-bold text-black shadow-[0_0_20px_rgba(250,204,21,0.35)] transition hover:bg-[#f9d948]"
+                  className="mt-6 w-[calc(100%+40px)] -mx-5 -mb-5 rounded-none bg-[#facc15] px-5 py-4 text-center text-[26px] font-bold text-black shadow-[0_0_20px_rgba(250,204,21,0.35)] transition hover:bg-[#f9d948]"
                 >
                   Track Order
                 </button>
