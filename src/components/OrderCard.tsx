@@ -1,6 +1,9 @@
 ﻿import React from 'react';
-import { Eye, Truck } from 'lucide-react';
+import { Truck } from 'lucide-react';
 import type { Order } from '../types/Order';
+import G2355Icon from '../assets/g2355.svg';
+import ImageIcon from '../assets/Image.svg';
+import Group27Icon from '../assets/Group 27.svg';
 
 interface OrderCardProps {
   order: Order;
@@ -37,8 +40,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onSelect }) => {
 
       <div className="relative mt-4 border-l border-[#2d3138] pl-5">
         <div className="relative pb-3">
-          <span className="absolute -left-[27px] top-1 h-3 w-3 rounded-full bg-[#facc15] ring-4 ring-[#111418]" />
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <img src={G2355Icon} alt="pickup" className="mt-1 h-4 w-4 shrink-0 object-contain" />
             <div className="min-w-0 flex-1">
               <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500">Pickup</p>
               <h3 className="mt-2 text-base font-semibold text-white">{order.originCity}</h3>
@@ -49,8 +52,8 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onSelect }) => {
         </div>
 
         <div className="relative pt-2">
-          <span className="absolute -left-[27px] top-2 h-3 w-3 rounded-full bg-zinc-500 ring-4 ring-[#111418]" />
-          <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <img src={Group27Icon} alt="dropoff" className="mt-1 h-4 w-4 shrink-0 object-contain" />
             <div className="min-w-0 flex-1">
               <p className="text-[11px] uppercase tracking-[0.12em] text-zinc-500">Dropoff</p>
               <h3 className="mt-2 text-base font-semibold text-white">{order.destinationCity}</h3>
@@ -83,7 +86,7 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onSelect }) => {
         >
           <span>Resume</span>
           <span className="flex h-6 w-6 items-center justify-center rounded-full border border-black/70 bg-black/10">
-            <Eye className="h-3.5 w-3.5" />
+            <img src={ImageIcon} alt="view" className="h-3.5 w-3.5" />
           </span>
         </button>
       </div>

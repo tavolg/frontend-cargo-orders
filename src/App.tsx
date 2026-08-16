@@ -1,15 +1,17 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react';
-import { Bell, ChevronLeft, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Avatar } from './components/Avatar';
 import { OrderCard } from './components/OrderCard';
 import { fetchAllOrders, fetchUpcomingOrders } from './services/api';
 import type { Order } from './types/Order';
+import NotificationIcon from './assets/Notification.svg';
+import ArrowIcon from './assets/Image-1.svg';
 
 const TABS = ['Upcoming', 'Completed', 'Past'] as const;
 type Tab = (typeof TABS)[number];
 
 const getStatusSteps = (statusCode?: number) => {
-  const steps = ['Created Order', 'Accepted Order', 'Pickup set up by William', 'Pickup Completed'];
+  const steps = ['Created Order', 'Accepted Order', 'Pickup set up by ', 'Pickup Completed'];
   const activeIndex = Math.min(Math.max(Number(statusCode ?? 1), 1), 4) - 1;
 
   return steps.map((label, index) => ({
@@ -142,22 +144,22 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#060809] p-4 text-white">
+    <div className="flex min-h-screen items-center justify-center bg-[#060606] p-4 text-white">
       <div
-        className="relative flex h-[1078px] w-[440px] select-none flex-col overflow-hidden rounded-[42px] border border-[#646464] bg-[#0c0f13] p-5 shadow-[0_0_0_4px_rgba(255,255,255,0.04),0_30px_60px_rgba(0,0,0,0.8)]"
+        className="relative flex h-[1078px] w-[440px] select-none flex-col overflow-hidden rounded-[42px] border border-[#2a2a2a] bg-[#090909] p-5 shadow-[0_0_0_4px_rgba(255,255,255,0.04),0_30px_60px_rgba(0,0,0,0.8)]"
       >
         <div className="mx-auto mb-4 h-1.5 w-24 rounded-full bg-[#2f3237]" />
 
         {!selectedOrder && (
           <>
-            <header className="flex items-center justify-between pb-3">
-              <button type="button" className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-300 transition hover:bg-zinc-800/70">
-                <ChevronLeft className="h-5 w-5" />
+            <header className="cargo-header">
+              <button type="button" className="cargo-header-btn">
+                <img src={ArrowIcon} alt="back" className="cargo-header-btn-icon" />
               </button>
-              <h1 className="text-[19px] font-bold tracking-[-0.02em]">Cargo Orders</h1>
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900/80">
-                <Bell className="h-4 w-4 text-[#facc15]" />
-                <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-[#facc15]" />
+              <h1 className="cargo-header-title">Cargo Orders</h1>
+              <div className="cargo-header-notification">
+                <img src={NotificationIcon} alt="notification" className="cargo-header-notification-icon" />
+                <span className="cargo-header-notification-dot" />
               </div>
             </header>
 
@@ -214,11 +216,11 @@ export default function App() {
           <div className="flex min-h-0 flex-1 animate-[fadeIn_0.25s_ease-out] flex-col overflow-hidden rounded-[42px] bg-[#0d1116] p-5 transition-all duration-300">
             <div className="mb-4 flex items-center justify-between">
               <button type="button" onClick={() => setSelectedOrder(null)} className="flex h-8 w-8 items-center justify-center rounded-full text-zinc-300 transition hover:bg-zinc-800/60">
-                <ChevronLeft className="h-5 w-5" />
+                <img src={ArrowIcon} alt="back" className="h-5 w-5" />
               </button>
               <h2 className="text-[19px] font-bold tracking-[-0.02em]">Cargo Details</h2>
               <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-zinc-900/80">
-                <Bell className="h-4 w-4 text-[#facc15]" />
+                <img src={NotificationIcon} alt="notification" className="h-4 w-4" />
               </div>
             </div>
 
